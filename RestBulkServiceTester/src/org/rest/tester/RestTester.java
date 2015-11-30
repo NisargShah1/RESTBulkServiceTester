@@ -21,6 +21,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.custom.ScrolledComposite;
 
 public class RestTester {
 
@@ -66,7 +69,7 @@ public class RestTester {
 		shlResttester = new Shell();
 		shlResttester.setToolTipText("Add more ..");
 		shlResttester.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
-		shlResttester.setSize(450, 344);
+		shlResttester.setSize(450, 371);
 		shlResttester.setText("RestTester");
 		
 		txtServerName = new Text(shlResttester, SWT.BORDER);
@@ -78,9 +81,11 @@ public class RestTester {
 		lblServerName.setBounds(33, 13, 82, 18);
 		
 		ScrolledForm scrldfrmNewScrolledform = formToolkit.createScrolledForm(shlResttester);
-		scrldfrmNewScrolledform.setBounds(32, 53, 368, 156);
+		scrldfrmNewScrolledform.setBounds(32, 53, 385, 128);
 		formToolkit.paintBordersFor(scrldfrmNewScrolledform);
 		scrldfrmNewScrolledform.setText("Rest Services Form");
+//		scrldfrmNewScrolledform.setExpandVertical(false);
+		scrldfrmNewScrolledform.setAlwaysShowScrollBars(true);
 		
 		Label lblUri = new Label(scrldfrmNewScrolledform.getBody(), SWT.NONE);
 		lblUri.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
@@ -123,33 +128,12 @@ public class RestTester {
 		formToolkit.adapt(btnInputFileBrowse, true, true);
 		btnInputFileBrowse.setText("Browse..");
 		
-		Button btnAdd = new Button(scrldfrmNewScrolledform.getBody(), SWT.NONE);
-		btnAdd.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Label lblInput = formToolkit.createLabel(scrldfrmNewScrolledform.getBody(), "Input :", SWT.NONE);
-				lblInput.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-				lblInput.setBounds(20, 100, 55, 20);
-				
-				txtInput = new Text(scrldfrmNewScrolledform.getBody(), SWT.BORDER);
-				txtInput.setBounds(89, 120, 162, 25);
-				formToolkit.adapt(txtInput, true, true);
-			}
-		});
-		btnAdd.setToolTipText("Add more ..");
-		btnAdd.setBounds(267, 88, 28, 25);
-		formToolkit.adapt(btnAdd, true, true);
-		btnAdd.setText("+");
-		
 		Label label = new Label(scrldfrmNewScrolledform.getBody(), SWT.SEPARATOR | SWT.HORIZONTAL);
 		label.setBounds(0, 76, 368, 2);
 		formToolkit.adapt(label, true, true);
 		
-		Button btnSave = formToolkit.createButton(scrldfrmNewScrolledform.getBody(), "Save", SWT.NONE);
-		btnSave.setBounds(135, 88, 75, 25);
-		
 		txtOutputFolder = new Text(shlResttester, SWT.BORDER);
-		txtOutputFolder.setBounds(121, 222, 223, 30);
+		txtOutputFolder.setBounds(121, 241, 223, 30);
 		formToolkit.adapt(txtOutputFolder, true, true);
 		
 		Button btnSelectOutDir = new Button(shlResttester, SWT.NONE);
@@ -164,17 +148,92 @@ public class RestTester {
 				}
 			}
 		});
-		btnSelectOutDir.setBounds(350, 220, 50, 32);
+		btnSelectOutDir.setBounds(350, 235, 50, 32);
 		formToolkit.adapt(btnSelectOutDir, true, true);
 		btnSelectOutDir.setText("Select");
 		
 		Label lblReportFolder = formToolkit.createLabel(shlResttester, "Report Folder ", SWT.NONE);
 		lblReportFolder.setBackground(SWTResourceManager.getColor(245, 245, 245));
 		lblReportFolder.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
-		lblReportFolder.setBounds(33, 223, 88, 21);
+		lblReportFolder.setBounds(33, 242, 88, 21);
 		
 		Button btnRun = formToolkit.createButton(shlResttester, "Run", SWT.NONE);
-		btnRun.setBounds(184, 261, 75, 35);
+		btnRun.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println(txtServerName.getText()+"/"+txtUri.getText());
+			}
+		});
+		btnRun.setBounds(185, 288, 75, 35);
+		
+		Composite composite = new Composite(shlResttester, SWT.NONE);
+		composite.setBounds(33, 176, 367, 47);
+		formToolkit.adapt(composite);
+		formToolkit.paintBordersFor(composite);
+		
+		Button btnSave = formToolkit.createButton(composite, "Save", SWT.NONE);
+		btnSave.setBounds(87, 10, 75, 25);
+		
+		Button btnAdd = new Button(composite, SWT.NONE);
+		btnAdd.setBounds(229, 10, 28, 25);
+		btnAdd.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Label lblUri = new Label(scrldfrmNewScrolledform.getBody(), SWT.NONE);
+				lblUri.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
+				lblUri.setBounds(21, 100, 55, 20);
+				formToolkit.adapt(lblUri, true, true);
+				lblUri.setText("URI :");
+				
+				txtUri = new Text(scrldfrmNewScrolledform.getBody(), SWT.BORDER);
+				txtUri.setBounds(89, 100, 162, 23);
+				formToolkit.adapt(txtUri, true, true);
+				
+				Combo cmbMethodType = new Combo(scrldfrmNewScrolledform.getBody(), SWT.NONE);
+				cmbMethodType.setItems(new String[] {"GET", "POST", "PUT", "DELETE", "OPTION"});
+				cmbMethodType.setBounds(267, 100, 91, 23);
+				formToolkit.adapt(cmbMethodType);
+				formToolkit.paintBordersFor(cmbMethodType);
+				cmbMethodType.select(0);
+				
+				Label lblInput = formToolkit.createLabel(scrldfrmNewScrolledform.getBody(), "Input :", SWT.NONE);
+				lblInput.setFont(SWTResourceManager.getFont("Segoe UI", 10, SWT.NORMAL));
+				lblInput.setBounds(20, 135, 55, 20);
+				
+				txtInput = new Text(scrldfrmNewScrolledform.getBody(), SWT.BORDER);
+				txtInput.setBounds(89, 135, 162, 25);
+				formToolkit.adapt(txtInput, true, true);
+				
+				Button btnInputFileBrowse = new Button(scrldfrmNewScrolledform.getBody(), SWT.NONE);
+				btnInputFileBrowse.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						final JFileChooser fc  = new JFileChooser();
+						fc.setFileFilter(new FileNameExtensionFilter("Json File", "json","txt"));
+						int response = fc.showOpenDialog(null);
+						if(response==JFileChooser.APPROVE_OPTION){
+							 txtInput.setText(fc.getSelectedFile().toString());
+						}
+					}
+				});
+				btnInputFileBrowse.setBounds(267, 135, 91, 25);
+				formToolkit.adapt(btnInputFileBrowse, true, true);
+				btnInputFileBrowse.setText("Browse..");
+				
+				Label label = new Label(scrldfrmNewScrolledform.getBody(), SWT.SEPARATOR | SWT.HORIZONTAL);
+				label.setBounds(0, 170, 368, 2);
+				formToolkit.adapt(label, true, true);
+				
+				scrldfrmNewScrolledform.setBounds(32, 53, 385, 114);
+//				scrldfrmNewScrolledform.setExpandVertical(false);
+				scrldfrmNewScrolledform.setAlwaysShowScrollBars(true);
+				
+				scrldfrmNewScrolledform.pack();
+			}
+		});
+		btnAdd.setToolTipText("Add more ..");
+		formToolkit.adapt(btnAdd, true, true);
+		btnAdd.setText("+");
 
 	}
 }
